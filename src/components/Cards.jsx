@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.css';
+import '../App.css';
 
 const cards = [
   {
@@ -54,9 +54,32 @@ const cards = [
 
 const Cards = () => {
 
+    // Initialize the card index to a random value
+    const [cardIndex, setCardIndex] = useState(() => Math.floor(Math.random() * cards.length));
+    const currentCard = cards[cardIndex];
+
+    // Function to get a random index that is different from the current index
+    const handleNextCard = () => {
+        setCardIndex((previousIndex) => getRandomIndex(previousIndex));
+    };
+
+    // Function to get a random index that is different from the current index
+    const getRandomIndex = (currentIndex) => {
+        if (cards.length <= 1) {
+            return 0;
+        }
+
+        let nextIndex = currentIndex;
+
+        while (nextIndex === currentIndex) {
+            nextIndex = Math.floor(Math.random() * cards.length);
+        }
+
+        return nextIndex;
+    };
+
   return (
     <main>
-      {/* Card */}
       <section className="board">
         <button
           type="button"
@@ -64,24 +87,23 @@ const Cards = () => {
           <div>
             <div>
               <span>Front</span>
-              <img className="flag" />
-              <h2>country</h2>
+              <img className="flag" src={currentCard.flag} alt={`${currentCard.country} flag`} />
+              <h2>{currentCard.country}</h2>
               <p>Click to reveal the capital.</p>
             </div>
 
             <div>
               <span>Back</span>
               <div>Capital</div>
-              <h2>capital</h2>
-              <p>descrip</p>
+              <h2>{currentCard.capital}</h2>
+              <p>{currentCard.country} is in {currentCard.region}.</p>
             </div>
           </div>
         </button>
 
-        {/* Next button */}
         <div className="controls">
-          <p className="hint">Category</p>
-          <button type="button" className="next-button">
+          <p className="hint">Category: {currentCard.region}</p>
+          <button type="button" className="next-button" onClick={handleNextCard}>
             Next random card
           </button>
         </div>
