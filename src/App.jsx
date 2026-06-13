@@ -8,7 +8,7 @@ const App = () => {
 
 
   return (
-    <main>
+    <main className="app">
       <DeckHeader
         title={deckTitle}
         description={deckDescription}
