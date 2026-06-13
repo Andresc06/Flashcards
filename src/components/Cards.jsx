@@ -52,6 +52,14 @@ const cards = [
   },
 ];
 
+const getCardClass = (region) => {
+  if (region === 'Asia') return 'asia';
+  if (region === 'South America' || region === 'North America') return 'america';
+  if (region === 'Africa') return 'africa';
+  if (region === 'Europe') return 'europe';
+  return 'oceania';
+};
+
 const Cards = ({ deckTitle }) => {
 
     // Initialize the card index to a random value
@@ -87,39 +95,39 @@ const Cards = ({ deckTitle }) => {
     };
 
   return (
-    <main>
-      <section className="board">
-        <p className="deck-label">{deckTitle}</p>
-        <button
-          className={`card ${isFlipped ? 'is-flipped' : ''}`}
-          onClick={handleCardClick}
-          type="button"
-        >
-          <div className="card-inner">
-            <div className="card-face card-front">
-              <span className="card-pill">Front</span>
-              <img className="flag" src={currentCard.flag} />
-              <h2>{currentCard.country}</h2>
-              <p>Click to reveal the capital.</p>
-            </div>
-
-            <div className="card-face card-back">
-              <span className="card-pill">Back</span>
-              <div className="capital-mark">Capital</div>
-              <h2>{currentCard.capital}</h2>
-              <p>{currentCard.country} is in {currentCard.region}.</p>
-            </div>
+    <section className="board">
+      <p className="set-name">{deckTitle}</p>
+      <button
+        className={`card ${getCardClass(currentCard.region)} ${isFlipped ? 'flip' : ''}`}
+        onClick={handleCardClick}
+        type="button"
+      >
+        <div className="inner">
+          <div className="face front">
+            <span className="pill">Front</span>
+            <img className="flag" src={currentCard.flag} alt={`${currentCard.country} flag`} />
+            <h2>{currentCard.country}</h2>
+            <p>Click to reveal the capital.</p>
           </div>
-        </button>
 
-        <div className="controls">
-          <p className="hint">Category: {currentCard.region}</p>
-          <button type="button" className="next-button" onClick={handleNextCard}>
-            Next random card
-          </button>
+          <div className="face back">
+            <span className="pill">Back</span>
+            <div className="mark">Capital</div>
+            <h2>{currentCard.capital}</h2>
+            <p>
+              {currentCard.country} is in {currentCard.region}.
+            </p>
+          </div>
         </div>
-      </section>
-    </main>
+      </button>
+
+      <div className="controls">
+        <p className="hint">Category: {currentCard.region}</p>
+        <button type="button" className="next" onClick={handleNextCard}>
+          Next random card
+        </button>
+      </div>
+    </section>
   );
 };
 
