@@ -52,7 +52,7 @@ const cards = [
   },
 ];
 
-const Cards = () => {
+const Cards = ({ deckTitle }) => {
 
     // Initialize the card index to a random value
     const [cardIndex, setCardIndex] = useState(() => Math.floor(Math.random() * cards.length));
@@ -89,6 +89,7 @@ const Cards = () => {
   return (
     <main>
       <section className="board">
+        <p className="deck-label">{deckTitle}</p>
         <button
           className={`card ${isFlipped ? 'is-flipped' : ''}`}
           onClick={handleCardClick}
