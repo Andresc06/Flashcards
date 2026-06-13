@@ -58,6 +58,14 @@ const Cards = () => {
     const [cardIndex, setCardIndex] = useState(() => Math.floor(Math.random() * cards.length));
     const currentCard = cards[cardIndex];
 
+    // Initialize the flip state to false
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    // Function to handle card click
+    const handleCardClick = () => {
+        setIsFlipped((previousValue) => !previousValue);
+    };
+
     // Function to get a random index that is different from the current index
     const handleNextCard = () => {
         setCardIndex((previousIndex) => getRandomIndex(previousIndex));
@@ -82,19 +90,21 @@ const Cards = () => {
     <main>
       <section className="board">
         <button
+          className={`card ${isFlipped ? 'is-flipped' : ''}`}
+          onClick={handleCardClick}
           type="button"
         >
-          <div>
-            <div>
-              <span>Front</span>
-              <img className="flag" src={currentCard.flag} alt={`${currentCard.country} flag`} />
+          <div className="card-inner">
+            <div className="card-face card-front">
+              <span className="card-pill">Front</span>
+              <img className="flag" src={currentCard.flag} />
               <h2>{currentCard.country}</h2>
               <p>Click to reveal the capital.</p>
             </div>
 
-            <div>
-              <span>Back</span>
-              <div>Capital</div>
+            <div className="card-face card-back">
+              <span className="card-pill">Back</span>
+              <div className="capital-mark">Capital</div>
               <h2>{currentCard.capital}</h2>
               <p>{currentCard.country} is in {currentCard.region}.</p>
             </div>
