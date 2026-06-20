@@ -74,7 +74,7 @@ const shuffleCards = (list) => {
 
 const normalize = (value) => value.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
 
-
+const splitWords = (value) => normalize(value).split(/\s+/).filter(Boolean);
 
 const Cards = ({ deckTitle }) => {
   const [activeCards, setActiveCards] = useState(cards);
@@ -82,7 +82,8 @@ const Cards = ({ deckTitle }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [guess, setGuess] = useState('');
   const [feedback, setFeedback] = useState(null);
-
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [longestStreak, setLongestStreak] = useState(0);
 
   const currentCard = activeCards[cardIndex];
 
@@ -122,21 +123,31 @@ const Cards = ({ deckTitle }) => {
 
     const cleanGuess = normalize(guess);
     const cleanAnswer = normalize(currentCard.capital);
+    const guessWords = splitWords(guess);
+    const answerWords = splitWords(currentCard.capital);
     const matchesAnswer =
       cleanGuess === cleanAnswer ||
-      cleanGuess.includes(cleanAnswer);
+      cleanGuess.includes(cleanAnswer) ||
+      answerWords.some((word) => guessWords.includes(word));
 
     if (!cleanGuess) {
       setFeedback({ type: 'wrong', text: 'Type a guess first.' });
+      setCurrentStreak(0);
       return;
     }
 
     if (matchesAnswer) {
       setFeedback({ type: 'correct', text: 'Correct!' });
+      setCurrentStreak((value) => {
+        const nextValue = value + 1;
+        setLongestStreak((previousLongest) => Math.max(previousLongest, nextValue));
+        return nextValue;
+      });
       return;
     }
 
     setFeedback({ type: 'wrong', text: `Not quite. ${currentCard.capital} is correct.` });
+    setCurrentStreak(0);
   };
 
   const handleNextCard = () => {
@@ -159,7 +170,18 @@ const Cards = ({ deckTitle }) => {
     resetGuess();
   };
 
+  const handleMasterCard = () => {
+    if (!currentCard) {
+      return;
+    }
 
+    const nextCards = activeCards.filter((_, index) => index !== cardIndex);
+
+    setActiveCards(nextCards);
+    setCardIndex((currentValue) => Math.min(currentValue, Math.max(nextCards.length - 1, 0)));
+    setIsFlipped(false);
+    resetGuess();
+  };
 
   return (
     <section className="board">
@@ -187,6 +209,16 @@ const Cards = ({ deckTitle }) => {
         <button type="button" className="nav shuffle" onClick={handleShuffle}>
           Shuffle
         </button>
+      </div>
+      <div className="stats">
+        <div className="stat">
+          <span>Current streak</span>
+          <strong>{currentStreak}</strong>
+        </div>
+        <div className="stat">
+          <span>Longest streak</span>
+          <strong>{longestStreak}</strong>
+        </div>
       </div>
       <div
         className={`card ${getCardClass(currentCard.region)} ${isFlipped ? 'flip' : ''}`}
