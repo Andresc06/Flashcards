@@ -67,17 +67,46 @@
 .board {
 	display: grid;
 	justify-items: center;
-	gap: 18px;
+	gap: 16px;
 }
 
 .card {
 	width: min(540px, 100%);
-	aspect-ratio: 5 / 3;
+	min-height: 520px;
 	padding: 0;
 	border: 0;
 	background: transparent;
 	perspective: 1400px;
 	cursor: pointer;
+}
+
+.nav-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 4px;
+}
+
+.count {
+	font-weight: 700;
+	color: #526279;
+}
+
+.nav {
+	border: 0;
+	border-radius: 999px;
+	padding: 10px 18px;
+	background: #122033;
+	color: #fff;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.nav:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
 }
 
 .inner {
@@ -194,6 +223,61 @@
 	color: rgba(255, 255, 255, 0.88);
 	font-size: 1rem;
 	line-height: 1.55;
+}
+
+.guess-form {
+	width: 100%;
+	max-width: 360px;
+	margin-top: 8px;
+	text-align: left;
+}
+
+.guess-label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.guess-row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.guess-input {
+	flex: 1;
+	min-width: 0;
+	border: 0;
+	border-radius: 999px;
+	padding: 12px 14px;
+	outline: none;
+	font: inherit;
+}
+
+.submit {
+	border: 0;
+	border-radius: 999px;
+	padding: 12px 16px;
+	background: rgba(255, 255, 255, 0.18);
+	color: #fff;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.msg {
+	margin: 10px 0 0;
+	font-weight: 700;
+}
+
+.msg.correct {
+	color: #dcfce7;
+}
+
+.msg.wrong {
+	color: #ffe4e6;
 }
 
 .mark {
