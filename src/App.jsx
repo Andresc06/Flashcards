@@ -1,6 +1,7 @@
 import './App.css';
 import DeckHeader from './components/DeckHeader';
 import Cards from './components/Cards';
+import cards from './data/cards';
 
 const App = () => {
   const deckTitle = 'Country to Capital';
@@ -12,7 +13,7 @@ const App = () => {
       <DeckHeader
         title={deckTitle}
         description={deckDescription}
-        totalCards={8}
+        totalCards={cards.length}
       />
 
       <Cards deckTitle={deckTitle} />
