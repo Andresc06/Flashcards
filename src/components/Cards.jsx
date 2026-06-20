@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import '../App.css';
+import GuessForm from './GuessForm';
 
 const cards = [
   {
@@ -61,18 +62,21 @@ const getCardClass = (region) => {
 };
 
 const Cards = ({ deckTitle }) => {
+  const [cardIndex, setCardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [guess, setGuess] = useState('');
+  const [feedback, setFeedback] = useState(null);
 
-    // Initialize the card index to a random value
-    const [cardIndex, setCardIndex] = useState(() => Math.floor(Math.random() * cards.length));
-    const currentCard = cards[cardIndex];
+  const currentCard = cards[cardIndex];
 
-    // Initialize the flip state to false
-    const [isFlipped, setIsFlipped] = useState(false);
+  const resetGuess = () => {
+    setGuess('');
+    setFeedback(null);
+  };
 
-    // Function to handle card click
-    const handleCardClick = () => {
-        setIsFlipped((previousValue) => !previousValue);
-    };
+  const handleCardClick = () => {
+    setIsFlipped((previousValue) => !previousValue);
+  };
 
     // Function to get a random index that is different from the current index
     const handleNextCard = () => {
@@ -108,6 +112,12 @@ const Cards = ({ deckTitle }) => {
             <img className="flag" src={currentCard.flag} alt={`${currentCard.country} flag`} />
             <h2>{currentCard.country}</h2>
             <p>Click to reveal the capital.</p>
+            <GuessForm
+              guess={guess}
+              feedback={feedback}
+              onGuessChange={handleGuessChange}
+              onSubmit={handleSubmit}
+            />
           </div>
 
           <div className="face back">
@@ -119,13 +129,10 @@ const Cards = ({ deckTitle }) => {
             </p>
           </div>
         </div>
-      </button>
+      </div>
 
       <div className="controls">
         <p className="hint">Category: {currentCard.region}</p>
-        <button type="button" className="next" onClick={handleNextCard}>
-          Next random card
-        </button>
       </div>
     </section>
   );
