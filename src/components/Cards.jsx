@@ -61,6 +61,17 @@ const getCardClass = (region) => {
   return 'oceania';
 };
 
+const shuffleCards = (list) => {
+  const nextList = [...list];
+
+  for (let index = nextList.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [nextList[index], nextList[swapIndex]] = [nextList[swapIndex], nextList[index]];
+  }
+
+  return nextList;
+};
+
 const Cards = ({ deckTitle }) => {
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -89,6 +100,13 @@ const Cards = ({ deckTitle }) => {
     setGuess(event.target.value);
   };
 
+  const handleShuffle = () => {
+    setActiveCards((currentCards) => shuffleCards(currentCards));
+    setCardIndex(0);
+    setIsFlipped(false);
+    resetGuess();
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -109,7 +127,7 @@ const Cards = ({ deckTitle }) => {
   };
 
   const handleNextCard = () => {
-    if (cardIndex === cards.length - 1) {
+    if (!activeCards.length || cardIndex === activeCards.length - 1) {
       return;
     }
 
@@ -141,15 +159,18 @@ const Cards = ({ deckTitle }) => {
           Back
         </button>
         <span className="count">
-          Card {cardIndex + 1} of {cards.length}
+          Card {cardIndex + 1} of {activeCards.length}
         </span>
         <button
           type="button"
           className="nav"
           onClick={handleNextCard}
-          disabled={cardIndex === cards.length - 1}
+          disabled={cardIndex === activeCards.length - 1}
         >
           Next
+        </button>
+        <button type="button" className="nav shuffle" onClick={handleShuffle}>
+          Shuffle
         </button>
       </div>
       <div
