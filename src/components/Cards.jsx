@@ -48,7 +48,7 @@ const Cards = ({ deckTitle }) => {
   };
 
   const handleCardKeyDown = (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === 'Enter') {
       event.preventDefault();
       handleCardClick();
     }
