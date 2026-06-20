@@ -84,6 +84,7 @@ const Cards = ({ deckTitle }) => {
   const [feedback, setFeedback] = useState(null);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [longestStreak, setLongestStreak] = useState(0);
+  const [masteredCards, setMasteredCards] = useState([]);
 
   const currentCard = activeCards[cardIndex];
 
@@ -177,11 +178,31 @@ const Cards = ({ deckTitle }) => {
 
     const nextCards = activeCards.filter((_, index) => index !== cardIndex);
 
+    setMasteredCards((currentMastered) => [...currentMastered, currentCard]);
     setActiveCards(nextCards);
     setCardIndex((currentValue) => Math.min(currentValue, Math.max(nextCards.length - 1, 0)));
     setIsFlipped(false);
     resetGuess();
   };
+
+  if (!currentCard) {
+    return (
+      <section className="board">
+        <p className="set-name">{deckTitle}</p>
+        <p className="done">All cards have been mastered.</p>
+        <div className="mastered">
+          <h2>Mastered cards</h2>
+          <ul className="mastered-list">
+            {masteredCards.map((card) => (
+              <li key={card.country} className="mastered-item">
+                {card.country} - {card.capital}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="board">
@@ -239,6 +260,16 @@ const Cards = ({ deckTitle }) => {
               onGuessChange={handleGuessChange}
               onSubmit={handleSubmit}
             />
+            <button
+              type="button"
+              className="master-btn"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleMasterCard();
+              }}
+            >
+              Mark mastered
+            </button>
           </div>
 
           <div className="face back">
@@ -254,6 +285,21 @@ const Cards = ({ deckTitle }) => {
 
       <div className="controls">
         <p className="hint">Category: {currentCard.region}</p>
+      </div>
+
+      <div className="mastered">
+        <h2>Mastered cards</h2>
+        {masteredCards.length === 0 ? (
+          <p className="empty">No mastered cards yet.</p>
+        ) : (
+          <ul className="mastered-list">
+            {masteredCards.map((card) => (
+              <li key={card.country} className="mastered-item">
+                {card.country} - {card.capital}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );
