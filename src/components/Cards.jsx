@@ -78,33 +78,86 @@ const Cards = ({ deckTitle }) => {
     setIsFlipped((previousValue) => !previousValue);
   };
 
-    // Function to get a random index that is different from the current index
-    const handleNextCard = () => {
-        setCardIndex((previousIndex) => getRandomIndex(previousIndex));
-    };
+  const handleCardKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleCardClick();
+    }
+  };
 
-    // Function to get a random index that is different from the current index
-    const getRandomIndex = (currentIndex) => {
-        if (cards.length <= 1) {
-            return 0;
-        }
+  const handleGuessChange = (event) => {
+    setGuess(event.target.value);
+  };
 
-        let nextIndex = currentIndex;
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-        while (nextIndex === currentIndex) {
-            nextIndex = Math.floor(Math.random() * cards.length);
-        }
+    const cleanGuess = guess.trim().toLowerCase();
+    const cleanAnswer = currentCard.capital.toLowerCase();
 
-        return nextIndex;
-    };
+    if (!cleanGuess) {
+      setFeedback({ type: 'wrong', text: 'Type a guess first.' });
+      return;
+    }
+
+    if (cleanGuess === cleanAnswer) {
+      setFeedback({ type: 'correct', text: 'Correct!' });
+      return;
+    }
+
+    setFeedback({ type: 'wrong', text: `Not quite. ${currentCard.capital} is correct.` });
+  };
+
+  const handleNextCard = () => {
+    if (cardIndex === cards.length - 1) {
+      return;
+    }
+
+    setCardIndex(cardIndex + 1);
+    setIsFlipped(false);
+    resetGuess();
+  };
+
+  const handlePrevCard = () => {
+    if (cardIndex === 0) {
+      return;
+    }
+
+    setCardIndex(cardIndex - 1);
+    setIsFlipped(false);
+    resetGuess();
+  };
 
   return (
     <section className="board">
       <p className="set-name">{deckTitle}</p>
-      <button
+      <div className="nav-row">
+        <button
+          type="button"
+          className="nav"
+          onClick={handlePrevCard}
+          disabled={cardIndex === 0}
+        >
+          Back
+        </button>
+        <span className="count">
+          Card {cardIndex + 1} of {cards.length}
+        </span>
+        <button
+          type="button"
+          className="nav"
+          onClick={handleNextCard}
+          disabled={cardIndex === cards.length - 1}
+        >
+          Next
+        </button>
+      </div>
+      <div
         className={`card ${getCardClass(currentCard.region)} ${isFlipped ? 'flip' : ''}`}
         onClick={handleCardClick}
-        type="button"
+        onKeyDown={handleCardKeyDown}
+        role="button"
+        tabIndex={0}
       >
         <div className="inner">
           <div className="face front">
