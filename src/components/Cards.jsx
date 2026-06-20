@@ -72,13 +72,19 @@ const shuffleCards = (list) => {
   return nextList;
 };
 
+const normalize = (value) => value.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+
+
+
 const Cards = ({ deckTitle }) => {
+  const [activeCards, setActiveCards] = useState(cards);
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [guess, setGuess] = useState('');
   const [feedback, setFeedback] = useState(null);
 
-  const currentCard = cards[cardIndex];
+
+  const currentCard = activeCards[cardIndex];
 
   const resetGuess = () => {
     setGuess('');
@@ -110,15 +116,22 @@ const Cards = ({ deckTitle }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const cleanGuess = guess.trim().toLowerCase();
-    const cleanAnswer = currentCard.capital.toLowerCase();
+    if (!currentCard) {
+      return;
+    }
+
+    const cleanGuess = normalize(guess);
+    const cleanAnswer = normalize(currentCard.capital);
+    const matchesAnswer =
+      cleanGuess === cleanAnswer ||
+      cleanGuess.includes(cleanAnswer);
 
     if (!cleanGuess) {
       setFeedback({ type: 'wrong', text: 'Type a guess first.' });
       return;
     }
 
-    if (cleanGuess === cleanAnswer) {
+    if (matchesAnswer) {
       setFeedback({ type: 'correct', text: 'Correct!' });
       return;
     }
@@ -145,6 +158,8 @@ const Cards = ({ deckTitle }) => {
     setIsFlipped(false);
     resetGuess();
   };
+
+
 
   return (
     <section className="board">
